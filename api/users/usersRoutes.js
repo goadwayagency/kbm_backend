@@ -21,7 +21,7 @@ const { File } = require('buffer');
 
 
 const storage = multer.diskStorage({
-  destination: 'public/uploads',
+  destination: path.join(__dirname, './public/uploads'),
   filename: (req, file, cb) => {
     const extension = file.originalname.split('.').pop();
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
