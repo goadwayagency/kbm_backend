@@ -5,6 +5,8 @@ const cors = require('cors');
 // const verifyToken = require("./auth/authMiddleware");
 // const multer = require('multer');
 const usersRoutes = require('./api/users/usersRoutes');
+require('dotenv').config();
+
 
 
 const path = require('path'); // Add this line
