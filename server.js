@@ -2,15 +2,11 @@ const express = require('express');
 const app = express();
 const server = require('http').Server(app);
 const cors = require('cors');
-// const verifyToken = require("./auth/authMiddleware");
-// const multer = require('multer');
+const multer = require('multer');
 const usersRoutes = require('./api/users/usersRoutes');
 require('dotenv').config();
 
-
-
-const path = require('path'); // Add this line
-const { error } = require('console');
+const path = require('path'); // Import the path module
 
 const storage = multer.diskStorage({
   destination: path.join(__dirname, './public/uploads'),
@@ -21,36 +17,24 @@ const storage = multer.diskStorage({
   },
 });
 
-  
 const upload = multer({ storage });
 
-const path = require('path'); // Add this line
-const { error } = require('console');
-
-// const storage = multer.diskStorage({
-//   destination: path.join(__dirname, './public/uploads'),
-//   filename: (req, file, callback) => {
-//     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-//     const extension = path.extname(file.originalname);
-//     callback(null, uniqueSuffix + extension);
-//   },
-// });
-
-  
-  
-const allowedOrigins = [ 'http://localhost:3000','https://kickboxingmorocco.club'];
+const allowedOrigins = ['http://localhost:3000', 'https://kickboxingmorocco.club'];
 
 app.use(cors({
-  origin: allowedOrigins
+  origin: allowedOrigins,
 }));
 
-// app.set('views', path.join(__dirname, 'views')); 
-// app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(express.json());
 app.use('/api/users', usersRoutes);
 
+const port = process.env.PORT || 4000; // Use the provided PORT or default to 4000
 
+server.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
 
-
-server.listen(4000)
+server.on('error', (error) => {
+  console.error('Server error:', error);
+});
