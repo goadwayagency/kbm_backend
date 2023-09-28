@@ -28,7 +28,7 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({ storage });
 
 // Example route for file upload
 router.post('/upload',upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'document', maxCount: 1 }]) , (req, res) => {
