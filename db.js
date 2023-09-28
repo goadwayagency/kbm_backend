@@ -3,10 +3,10 @@ require('dotenv').config();
 
 
 const pool = mysql.createPool({
-  host: 'srv659.hstgr.io',
-  user: 'u861150053_kbmorocco',
-  password: '1234@Kbm',
-  database: 'u861150053_kbmorocco',
+  host: HOST,
+  user: DATABASE,
+  password: KBM_PASSWORD,
+  database: DATABASE,
   waitForConnections: true,
   connectionLimit: 10, // Adjust the connection limit as needed
   queueLimit: 0,
