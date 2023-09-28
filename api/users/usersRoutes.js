@@ -21,14 +21,15 @@ const { File } = require('buffer');
 
 
 const storage = multer.diskStorage({
-  destination: 'public/uploads',
-  filename: (req, file, cb) => {
-    const extension = file.originalname.split('.').pop();
+  destination: path.join(__dirname, '../../public/uploads'),
+  filename: (req, file, callback) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, 'file-' + uniqueSuffix + '.' + extension);
+    const extension = path.extname(file.originalname);
+    callback(null, uniqueSuffix + extension);
   },
 });
 
+  
 const upload = multer({ storage });
 
 // Example route for file upload
