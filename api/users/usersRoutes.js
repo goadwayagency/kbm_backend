@@ -10,11 +10,13 @@ const User = require('../../models/Users');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const db =require('../../db');
+const transporter = require('../../mailer');
 
 
 const path = require('path'); // Add this line
 const { error } = require('console');
 const { File } = require('buffer');
+
 
 
 const storage = multer.diskStorage({
@@ -41,6 +43,28 @@ router.post('/upload',upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'd
   res.status(200).json({ message: 'Files uploaded successfully', avatarPath, documentPath });
 });
 
+router.post('/send_email', (req, res) => {
+  const email = req.body.email;
+
+  const mailOptions = {
+    from: 'contact@kickboxingmorocco.club',
+    to: email, // User's email address
+    subject: 'Welcome to Your App',
+    text: 'Thank you for signing up! Your account has been successfully created.',
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error('Error sending email:', error);
+      res.status(500).json('Error sending email');
+    } else {
+      console.log('Email sent:', info.response);
+      res.status(200).json('Email sent successfully');
+    }
+  });
+});
+
+
 // ... Other imports and configurations
 
 router.post('/sign_up', upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'document', maxCount: 1 }]), async (req, res) => {
@@ -60,6 +84,25 @@ router.post('/sign_up', upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 
   try {
     const [results] = await db.execute('INSERT INTO users (email, password, phone, authToken, type, username, status,firstName,lastName,dob, avatar , document,children_names) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?)',
       [email, hashedPassword, phone, authToken, type, username, status, firstName,lastName,dob, avatar, document,JSON.stringify(childrenNames)]);
+
+      const mailOptions = {
+        from: 'contact@kickboxingmorocco.club',
+        to: email, // User's email address
+        subject: 'Bienvenue à Kickboxing Morocco',
+        text: `Merci de vous être inscrit à votre application !\n\n` +
+          `Vos identifiants de connexion sont les suivants :\n` +
+          `Email: ${email}\n` +
+          `Mot de pass: ${password}\n\n` +
+          `Vous pouvez maintenant vous connecter et commencer à utiliser nos services bientot.`
+      };
+    
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.error('Error sending welcome email:', error);
+        } else {
+          console.log('Welcome email sent:', info.response);
+        }
+      });
 
     res.status(201).json({ message: 'User registered successfully', authToken });
   } catch (error) {
