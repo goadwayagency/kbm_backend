@@ -13,8 +13,8 @@ const transporter = nodemailer.createTransport({
     debug: true,
     connectionTimeout: 10000,
     auth: {
-        user: KBM_EMAIL,
-        pass: KBM_PASSWORD,
+        user: process.env.KBM_EMAIL,
+        pass: process.env.KBM_PASSWORD,
     },
 });
 
